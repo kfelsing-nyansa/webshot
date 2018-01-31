@@ -43,6 +43,7 @@ module Webshot
         full = opts.fetch(:full, true)
         selector = opts.fetch(:selector, nil)
         nothumb = opts.fetch(:nothumb, false)
+        hover = opts.fetch(:hover, nil)
         allowed_status_codes = opts.fetch(:allowed_status_codes, [])
 
         # Reset session before visiting url
@@ -60,6 +61,11 @@ module Webshot
         unless valid_status_code?(status_code, allowed_status_codes)
           fail WebshotError, "Could not fetch page: #{url.inspect}, error code: #{page.driver.status_code}"
         end
+
+        if hover.is_a? String
+          find(hover).hover
+        end
+
         tmp = Tempfile.new(["webshot", ".png"])
         tmp.close
         begin
